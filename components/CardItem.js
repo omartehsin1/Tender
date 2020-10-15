@@ -48,7 +48,7 @@ const CardItem = ({
                     flip={isClickable}
                     style={flipCardStyles.card}
                     clickable={false}
-                    onFlipEnd={(isFlipEnd) => { console.log('isFlipEnd', recipe) }}>
+                    onFlipEnd={(isFlipEnd) => { console.log('isFlipEnd') }}>
                         <View style={flipCardStyles.face}>
                             <Image source={image} style={imageStyle} />
                             <Text style={nameStyle}>{name}</Text>
@@ -60,17 +60,17 @@ const CardItem = ({
                                 <TouchableOpacity style={styles.button} onPress={() => onPressLeft()}>
                                     <Text style={styles.like}>
                                     
-                                    <Icon name="thumbs-o-up" size={20} color="#900" />
+                                    <Icon name="thumbs-o-down" size={20} color="#900" />
                                     </Text>
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
                                     style={styles.button}
-                                    onPress={() => onPressRight()}
+                                    onPress={() => onPressRight(console.log("swiped right!"))}
                                 >
                                     <Text style={styles.dislike}>
                                     
-                                    <Icon name="thumbs-o-down" size={20} color="#900" />
+                                    <Icon name="thumbs-o-up" size={20} color="#900" />
                                     </Text>
                                 </TouchableOpacity>
 

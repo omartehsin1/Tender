@@ -3,11 +3,13 @@ import {Text, View, Image, Dimensions, TouchableOpacity, StyleSheet} from 'react
 import FlipCard from 'react-native-flip-card';
 import Icon from 'react-native-vector-icons/FontAwesome';
 //padding: 100
-const Matches = () => {
+const Matches = (props) => {
   const [isClickable, setIsClickable] = useState(false);
+  // console.log(test);
     return (
       <View style={styles.container}>
-        <View>
+        {/* <Text>{props.test}</Text> */}
+        {/* <View>
         <FlipCard
         friction={6}
         perspective={1000}
@@ -35,7 +37,7 @@ const Matches = () => {
             <Icon name="info-circle" size={30} color="#900" />
           </TouchableOpacity>
         </View>
-      </View>
+      </View> */}
 
 
       </View>

@@ -1,11 +1,12 @@
   
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
-  Image,
+  Image, 
+  AsyncStorage
 } from 'react-native';
 import CardStack, { Card } from 'react-native-card-stack-swiper';
 import styles from '../assets/styles';
@@ -15,6 +16,12 @@ import MatchesScreen from './Matches'
 
 const Home = () => {
   const test = 'This is a test';
+  const matchedFood = ['pear'];
+  const [result, setResult] = useState([]);
+  // const addToMatchedFoodsArray = (id, food) => {
+  //   return matchedFood.push([id, food]);
+  // }
+  // console.log("matchedFood", result);
 
     return (
 
@@ -27,11 +34,17 @@ const Home = () => {
           verticalSwipe={false}
           renderNoMoreCards={() => null}
           ref={swiper => (this.swiper = swiper)}
-           onSwipedRight={() => <MatchesScreen test={test}/>}
           >
             {Demo.map((item, index) => (
               <Card key={index} 
-              // onSwipedRight={() => <MatchesScreen test={test}/>}
+              onSwipedRight={() => 
+                //console.log("index", index.toString())
+                 AsyncStorage.setItem(index.toString(), JSON.stringify(item))
+                // addToMatchedFoodsArray(index, item),
+                //  setResult(result => [...result, item]) 
+                
+                
+              }
               >
                 <CardItem 
                   image={item.image}
@@ -48,6 +61,7 @@ const Home = () => {
           </CardStack>
       </View>
     );
+    
 }
 
 

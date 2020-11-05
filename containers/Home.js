@@ -22,6 +22,35 @@ const Home = () => {
   //   return matchedFood.push([id, food]);
   // }
   // console.log("matchedFood", result);
+  const fetchSelection = async () => {
+    try {
+      const value = await AsyncStorage.getItem('preference')
+      const keys = await AsyncStorage.getAllKeys();
+
+      
+
+      if (value !== null) {
+         console.log(value)
+          // console.log(keys)
+      } else {
+        console.log("nothing");
+      }
+      // "key": [{"chicken": "true"}]
+      // const result = [{}];
+      // const keys = await AsyncStorage.getAllKeys()
+      // for (const key of keys) {
+      //   const val = await AsyncStorage.getItem(key)
+      //   result[key] = JSON.parse(val);
+      // }
+      // // console.log(result)
+      // return result
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+    fetchSelection().then(response => setResult(response))
+    // {console.log(result)}
 
     return (
 
@@ -38,11 +67,7 @@ const Home = () => {
             {Demo.map((item, index) => (
               <Card key={index} 
               onSwipedRight={() => 
-                //console.log("index", index.toString())
                  AsyncStorage.setItem(index.toString(), JSON.stringify(item))
-                // addToMatchedFoodsArray(index, item),
-                //  setResult(result => [...result, item]) 
-                
                 
               }
               >

@@ -1,5 +1,5 @@
   
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -15,44 +15,43 @@ import Demo from '../assets/data/demo';
 import MatchesScreen from './Matches'
 
 const Home = () => {
-  const test = 'This is a test';
-  const matchedFood = ['pear'];
-  const [result, setResult] = useState([]);
+  const [result, setResult] = useState([{}]);
   // const addToMatchedFoodsArray = (id, food) => {
   //   return matchedFood.push([id, food]);
   // }
   // console.log("matchedFood", result);
-  const fetchSelection = async () => {
-    try {
-      const value = await AsyncStorage.getItem('preference')
-      const keys = await AsyncStorage.getAllKeys();
-
-      
-
-      if (value !== null) {
-         console.log(value)
-          // console.log(keys)
-      } else {
-        console.log("nothing");
-      }
-      // "key": [{"chicken": "true"}]
-      // const result = [{}];
-      // const keys = await AsyncStorage.getAllKeys()
-      // for (const key of keys) {
-      //   const val = await AsyncStorage.getItem(key)
-      //   result[key] = JSON.parse(val);
-      // }
-      // // console.log(result)
-      // return result
-
-    } catch (error) {
-      console.log(error)
-    }
+// useEffect(() => {
+//   // const fetchData = async () => {
+//   //   const val = await AsyncStorage.getItem("userPreferences");
+//   //   setResult(val);
+//   // };
+//   // fetchData()
+//   console.log("useEffect")
+// });
+useEffect(() => {
+  console.log("useEffect");
+  
+  return () => {
+    console.log("unmount")
   }
-    fetchSelection().then(response => setResult(response))
-    // {console.log(result)}
+}, [])
 
+  // const fetchSelection = async () => {
+  //   try {
+  //     const result = [{}];
+  //     const val = await AsyncStorage.getItem("userPreferences");
+  //     result = JSON.parse(val);
+  //      console.log(result);
+  //     return result
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
+
+  // fetchSelection().then(response => console.log(response));
+  
     return (
+      
 
       <View style={styles.containerHome}>
         <View style={styles.top}>
@@ -89,5 +88,11 @@ const Home = () => {
     
 }
 
+// export const preferenceUpdate = () => {
+//   console.log("I have been saved");
+//   // useEffect(() => {
+//   //   console.log("I have been saved");
+//   // }, [save])
+// }
 
 export default Home;

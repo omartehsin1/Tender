@@ -21,18 +21,36 @@ const Profile = () => {
   let theData = Demo;
 
   const savePressed = () => {
+        // AsyncStorage.clear();
+    AsyncStorage.setItem("userFoodPreferences", JSON.stringify(data));
+    AsyncStorage.setItem('chicken', JSON.stringify(isChickenSelected));
+    AsyncStorage.setItem('beef', JSON.stringify(isBeefSelected));
+    AsyncStorage.setItem('fish', JSON.stringify(isFishSelected));
+    AsyncStorage.setItem('vegetarian', JSON.stringify(isVegetarianSelected));
+    AsyncStorage.setItem('vegan', JSON.stringify(isVeganSelected));
+    AsyncStorage.setItem('glutenFree', JSON.stringify(isGlutenFreeSelected));
+    //    setQuery(!query)
     
-    //  AsyncStorage.setItem("userFoodPreferences", JSON.stringify(data))
-    //  localStorage.setItem("userFoodPreferences", JSON.stringify(data));
-      //  console.log(data);
-       setQuery(!query)
-      //  preferenceUpdate(query);
+
+
   }
    const fetchItems = async () => {
     try {
-      const result = [{}];
+      const chicken = await AsyncStorage.getItem('chicken');
+      const beef = await AsyncStorage.getItem('beef');
+      const fish = await AsyncStorage.getItem('fish');
+      const vegetarian = await AsyncStorage.getItem('vegetarian');
+      const vegan = await AsyncStorage.getItem('vegan');
+      const glutenFree = await AsyncStorage.getItem('glutenFree');
       const val = await AsyncStorage.getItem("userFoodPreferences");
-      return val
+      console.log(val)
+      setChickenSelection(chicken)
+      setBeefSelection(beef)
+      setFishSelection(fish)
+      setVegetarianSelection(vegetarian)
+      setVeganSelection(vegan)
+      setGlutenFreeSelection(glutenFree)
+      // return val
 
     } catch(error) {
       console.log(error)
@@ -45,13 +63,15 @@ const Profile = () => {
     // console.log("test")
     // Home.preferenceUpdate(query);
     // preferenceUpdate(query);
-    preferenceUpdate
-    // fetchItems().then(response => console.log(response))
-  }, [query])
+    // preferenceUpdate
+    
+     fetchItems()
+     
+  }, [query]);
 
 
-
-
+    
+    
 
     return (
       <View style={styles.container}>
@@ -62,20 +82,16 @@ const Profile = () => {
             onValueChange={(val) => 
               
               {
-                setChickenSelection(val);
+                 setChickenSelection(val);
                 if (val == true) {
                 
                 setTheArray(theArray => [...theArray, "Chicken"])
-                let chickenData = theData.filter((pref) => pref.type == "Chicken")
-                for (const chickData of chickenData) {
-                  setData(data => [...data, chickData])
+                let foodData = theData.filter((pref) => pref.type == "Chicken")
+                for (const recipe of foodData) {
+                  setData(data => [...data, recipe])
                 }
-                // console.log(chickenData)
-                
-                
 
               } else {
-                // console.log("it is false");
                 setTheArray(theArray.filter(function(preference) {
                   return preference !== "Chicken"
                 }))
@@ -97,11 +113,11 @@ const Profile = () => {
                 setBeefSelection(val)
                 if (val == true) {
                 setTheArray(theArray => [...theArray, "Beef"])
-                let beefData = theData.filter((pref) => pref.type == "Beef")
-                for (const beef of beefData) {
-                  setData(data => [...data, beef])
+                let foodData = theData.filter((pref) => pref.type == "Beef")
+                for (const recipe of foodData) {
+                  setData(data => [...data, recipe])
                 }
-                // setData(data => [...data, beefData])
+                
               } else {
                 setTheArray(theArray.filter(function(preference) {
                   return preference !== "Beef"
@@ -111,7 +127,6 @@ const Profile = () => {
             }
             style={styles.checkbox}
           />
-          {/* {saveSelection('beef', isBeefSelected)} */}
           <Text style={styles.label}>Beef</Text>  
           </View> 
 
@@ -121,14 +136,23 @@ const Profile = () => {
             value={isFishSelected}
             onValueChange={(val) => 
               {
+                setFishSelection(val)
                 if (val == true) {
                 setTheArray(theArray => [...theArray, "Fish"])
+                let foodData = theData.filter((pref) => pref.type == "Fish")
+                for (const recipe of foodData) {
+                  setData(data => [...data, recipe])
+                }
+                
+              } else {
+                setTheArray(theArray.filter(function(preference) {
+                  return preference !== "Fish"
+                }))
               }
             }
           }
             style={styles.checkbox}
           />
-          {/* {saveSelection('fish', isFishSelected)} */}
           <Text style={styles.label}>Fish</Text>
           </View>
 
@@ -137,12 +161,24 @@ const Profile = () => {
           <CheckBox
             value={isVegetarianSelected}
             onValueChange={(val) => 
-              {if (val == true) {
+              {
+                setVegetarianSelection(val)
+                if (val == true) {
                 setTheArray(theArray => [...theArray, "Vegetarian"])
-              }}}
+                let foodData = theData.filter((pref) => pref.type == "Vegetarian")
+                for (const recipe of foodData) {
+                  setData(data => [...data, recipe])
+                }
+                
+              } else {
+                setTheArray(theArray.filter(function(preference) {
+                  return preference !== "Vegetarian"
+                }))
+              }
+            }
+            }
             style={styles.checkbox}
           />
-          {/* {saveSelection('vegetarian', isVegetarianSelected)} */}
           <Text style={styles.label}>Vegetarian</Text>
           </View>
 
@@ -151,9 +187,22 @@ const Profile = () => {
           <CheckBox
             value={isVeganSelected}
             onValueChange={(val) => 
-              {if (val == true) {
+              {
+                setVeganSelection(val)
+                if (val == true) {
                 setTheArray(theArray => [...theArray, "Vegan"])
-              }}}
+                let foodData = theData.filter((pref) => pref.type == "Vegan")
+                for (const recipe of foodData) {
+                  setData(data => [...data, recipe])
+                }
+                
+              } else {
+                setTheArray(theArray.filter(function(preference) {
+                  return preference !== "Vegan"
+                }))
+              }
+            }
+            }
             style={styles.checkbox}
           />
           {/* {saveSelection('vegan', isVeganSelected)} */}
@@ -165,30 +214,30 @@ const Profile = () => {
           <CheckBox
             value={isGlutenFreeSelected}
             onValueChange={(val) => 
-              {if (val == true) {
-                setTheArray(theArray => [...theArray, "Gluten-Free"])
-              }}}
+              {
+                setGlutenFreeSelection(val)
+                if (val == true) {
+                setTheArray(theArray => [...theArray, "GlutenFree"])
+                let foodData = theData.filter((pref) => pref.type == "GlutenFree")
+                for (const recipe of foodData) {
+                  setData(data => [...data, recipe])
+                }
+                
+              } else {
+                setTheArray(theArray.filter(function(preference) {
+                  return preference !== "GlutenFree"
+                }))
+              }
+            }
+            }
             style={styles.checkbox}
           />
-          {/* {saveSelection('glutenFree', isGlutenFreeSelected)} */}
           <Text style={styles.label}>Gluten Free</Text>
           </View>
 
         </View>
 
-        <Button title="Save" onPress={savePressed
-          //   {
-          //     theArray.map((item, index) => (
-          //     //  data.filter(obj => obj.type.includes(pref => console.log(pref)))
-          //     // console.log(data)
-              
-
-                
-          //     ))
-
-          // }
-        }/>
-        {/* onPress={AsyncStorage.clear()} */}
+        <Button title="Save" onPress={savePressed}/>
     </View>
     );
 }

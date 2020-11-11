@@ -15,26 +15,21 @@ import Demo from '../assets/data/demo';
 import MatchesScreen from './Matches'
 
 const Home = () => {
-  const [result, setResult] = useState([{}]);
-  // const addToMatchedFoodsArray = (id, food) => {
-  //   return matchedFood.push([id, food]);
-  // }
-  // console.log("matchedFood", result);
-// useEffect(() => {
-//   // const fetchData = async () => {
-//   //   const val = await AsyncStorage.getItem("userPreferences");
-//   //   setResult(val);
-//   // };
-//   // fetchData()
-//   console.log("useEffect")
-// });
-useEffect(() => {
-  console.log("useEffect");
-  
-  return () => {
-    console.log("unmount")
+  const [result, setResult] = useState(Demo);
+  const fetchSavedItems = async () => {
+    try {
+      const val = await AsyncStorage.getItem("userFoodPreferences");
+      // if(val !== null) {
+      //   setResult(val)
+      // }
+        // console.log("val", val)
+       return val
+    } catch(error) {
+      console.log(error)
+    }
   }
-}, [])
+
+
 
   // const fetchSelection = async () => {
   //   try {
@@ -49,6 +44,28 @@ useEffect(() => {
   // }
 
   // fetchSelection().then(response => console.log(response));
+  fetchSavedItems().then(response => 
+    
+      console.log("response", response)
+      // if(response !== null) {
+      //    setResult(response);
+      // } else {
+      //   setResult(Demo);
+      // }
+    
+    )
+    // useEffect(() => {
+    //   // fetchSavedItems()
+    //   fetchSavedItems().then(response => {
+    //     if(response !== null)
+    //     {
+    //       setResult(response)
+    //       console.log(response)
+    //     }
+    //   }
+    //   )
+    // }, [])
+
   
     return (
       
@@ -57,23 +74,26 @@ useEffect(() => {
         <View style={styles.top}>
           
         </View>
+        
+        {console.log("results", result)}
+        
+        
         <CardStack
           loop={true}
           verticalSwipe={false}
           renderNoMoreCards={() => null}
           ref={swiper => (this.swiper = swiper)}
           >
-            {Demo.map((item, index) => (
+            {/* {result.map((item, index) => (
               <Card key={index} 
               onSwipedRight={() => 
                  AsyncStorage.setItem(index.toString(), JSON.stringify(item))
-                
               }
               >
                 <CardItem 
-                  image={item.image}
-                  name={item.name}
-                  description={item.description}
+                    image={item.image}
+                   name={item.name}
+                   description={item.description}
                   recipe={item.recipe}
                   instructions={item.instructions}
                   actions
@@ -81,7 +101,7 @@ useEffect(() => {
                   onPressRight={() => this.swiper.swipeRight()}
                   />
               </Card>
-            ))}
+            ))} */}
           </CardStack>
       </View>
     );

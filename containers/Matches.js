@@ -1,25 +1,17 @@
 import React, { useState } from 'react';
-import {Text, View, Image, TouchableOpacity, StyleSheet, AsyncStorage, FlatList} from 'react-native';
+import {Text, View, Image, TouchableOpacity, StyleSheet, AsyncStorage, FlatList, Dimensions} from 'react-native';
+import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import styles from '../assets/styles';
+import ItemLayout from './ItemLayout';
+import {snapPoint, timing, useClock, usePanGestureHandler, useValue} from  "react-native-redash/lib/module/v1";
+import Animated, { add, clockRunning, cond, eq, max, min, not, set, useCode, call, abs} from 'react-native-reanimated';
+import Action from './Action';
 
-
-// const Item = ({ title, subtitle, image, navTo }) => (
-//   <View style={styles.item}>
-//     <TouchableOpacity onPress={navTo}>
-//       <Image style={styles.image} source={image}/>
-//       <View style={{alignItems: "center", flex: 1}}>
-//         <Text style={styles.title}>{title}</Text>
-//         <Text style={styles.subtitle}>{subtitle}</Text>
-//       </View>
-//     </TouchableOpacity>
-//   </View>
-// );
-
+const { width }= Dimensions.get("window");
+const snapPoints = [-width, -100, 0];
 const Matches = ({navigation}) => {
   const [isClickable, setIsClickable] = useState(false);
   const [theItem, setTheItem] = useState([]);
-
   const fetchAllItems = async () => {
     try {
       const result = [{}];
@@ -33,13 +25,6 @@ const Matches = ({navigation}) => {
       console.log(error)
     }
   }
-  const goToDetailScreen = () => {
-     navigation.push('DetailsScreen', {theItem})
-  }
-  // const renderItem = ({ item }) => (
-  //   <Item title={item.name} subtitle={item.description} image={item.image} navTo={goToDetailScreen}/>
-  // );
-
 
   fetchAllItems().then(response => setTheItem(response))
     return (
@@ -48,15 +33,13 @@ const Matches = ({navigation}) => {
         <FlatList 
           data={theItem}
           renderItem={({ item }) => (
-          <View style={matchesStyles.item}>
             <TouchableOpacity onPress={() => navigation.push('DetailsScreen', item)}>
-              <Image style={matchesStyles.image} source={item.image}/>
-              <View style={{alignItems: "center", flex: 1}}>
-                <Text style={matchesStyles.title}>{item.name}</Text>
-                <Text style={matchesStyles.subtitle}>{item.description}</Text>
-              </View>
-            </TouchableOpacity>
-          </View> 
+              <Item onSwipe={() => {
+                const newItems = [...theItem];
+                newItems.splice(newItems.indexOf(item), 1);
+                setTheItem(newItems);
+              }} items={item}/>
+              </TouchableOpacity>
           )}
           keyExtractor={item => item.id} />
       </SafeAreaView>
@@ -64,36 +47,67 @@ const Matches = ({navigation}) => {
     );
 }
 
+const Item = (items, onSwipe) => {
+   const {gestureHandler, translation, velocity, state} = usePanGestureHandler();
+    const translateX = useValue(0);
+    const offsetX = useValue(0);
+    const deleteOpacity = useValue(1);
+    const height = useValue(110);
+    const clock = useClock();
+    const to = snapPoint(translateX, velocity.x, snapPoints);
+    const shouldRemove = eq(to, -width);
+    
+    useCode(
+      () => [
+        cond(
+          eq(state, State.ACTIVE),
+          set(translateX, add(offsetX,  min(translation.x, 0)))
+        ),
+        cond(
+          eq(state, State.END), [
+          set(translateX, timing({clock, from: translateX, to })),
+          set(offsetX, translateX),
+          cond(shouldRemove, [
+             set(height, timing({from: height, to: 0})),
+             set(deleteOpacity, 0),
+            cond(not(clockRunning(clock)), call([], () => void onSwipe))
+          ])
+        ])
+      ], 
+      [onSwipe] 
+    );
+  //  const translateX = translation.x;
+  return (
+    <Animated.View>
+      <View style={matchesStyles.background}>
+        <Action x={abs(translateX)} deleteOpacity={deleteOpacity}/>
+      </View>
+      <PanGestureHandler {...gestureHandler}>
+        <Animated.View style={{ height, transform: [{ translateX }]}}>
+          <ItemLayout props={items}/> 
+        </Animated.View> 
+      </PanGestureHandler>
+    </Animated.View>
+    
+  )
+}
+
+
 const matchesStyles = StyleSheet.create({
 
   container: {
     flex: 1,
     backgroundColor: '#F7F7F7',
-    marginTop: 60
+    marginTop: 10
   },
-  item: {
-    margin:10,
-    padding:10,
-    backgroundColor:"#FFF",
-    width:"80%",
-    flex:1,
-    alignSelf:"center",
-    flexDirection:"row",
-    borderRadius:5
+  background: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "#E1E2E3",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    overflow: "hidden",
   },
-  title: {
-    fontSize: 20,
-    marginLeft: 10
-  },
-  subtitle: {
-    fontSize: 12,
-    marginLeft: 10
-  },
-  image: {
-    width: 60,
-    height: 60,
-    borderRadius: 30
-  }
 });
 
 export default Matches;

@@ -5,7 +5,7 @@ import 'react-native-gesture-handler';
 // import MatchesScreen from './containers/Matches';
  import ProfileScreen from './containers/Profile';
  import Detail from './containers/DetailsScreen';
-import React from 'react';
+import React, {useEffect} from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native';
@@ -17,6 +17,14 @@ const Tab = createBottomTabNavigator();
 
 function MyTabs() {
   Icon.loadFont();
+  // useEffect(() => {
+  //   // const fetchData = async () => {
+  //   //   const val = await AsyncStorage.getItem("userPreferences");
+  //   //   setResult(val);
+  //   // };
+  //   // fetchData()
+  //   console.log("useEffect")
+  // });
   return (
     <Tab.Navigator>
       <Tab.Screen name="Home" component={HomeScreen} />

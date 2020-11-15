@@ -30,10 +30,6 @@ const listStyles = StyleSheet.create({
 function ItemLayout(props){
     return (
         <View style={listStyles.item}>
-            {/* <Text style={listStyles.title}>Hello</Text> 
-            <Text style={listStyles.title}>How</Text> 
-            <Text style={listStyles.title}>Are</Text> 
-            <Text style={listStyles.title}>You</Text>  */}
                 <Image style={listStyles.image} source={props.props.items.image}/>
                 <View style={{alignItems: "center", flex: 1}}>
                     <Text style={listStyles.title}>{props.props.items.name}</Text>

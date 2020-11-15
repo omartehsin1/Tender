@@ -4,7 +4,8 @@ import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ItemLayout from './ItemLayout';
 import {snapPoint, timing, useClock, usePanGestureHandler, useValue} from  "react-native-redash/lib/module/v1";
-import Animated, { add, clockRunning, cond, eq, max, min, not, set, useCode, call} from 'react-native-reanimated';
+import Animated, { add, clockRunning, cond, eq, max, min, not, set, useCode, call, abs} from 'react-native-reanimated';
+import Action from './Action';
 
 const { width }= Dimensions.get("window");
 const snapPoints = [-width, -100, 0];
@@ -24,9 +25,6 @@ const Matches = ({navigation}) => {
       console.log(error)
     }
   }
-  const goToDetailScreen = () => {
-     navigation.push('DetailsScreen', {theItem})
-  }
 
   fetchAllItems().then(response => setTheItem(response))
     return (
@@ -35,11 +33,13 @@ const Matches = ({navigation}) => {
         <FlatList 
           data={theItem}
           renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => navigation.push('DetailsScreen', item)}>
               <Item onSwipe={() => {
                 const newItems = [...theItem];
                 newItems.splice(newItems.indexOf(item), 1);
                 setTheItem(newItems);
               }} items={item}/>
+              </TouchableOpacity>
           )}
           keyExtractor={item => item.id} />
       </SafeAreaView>
@@ -50,9 +50,9 @@ const Matches = ({navigation}) => {
 const Item = (items, onSwipe) => {
    const {gestureHandler, translation, velocity, state} = usePanGestureHandler();
     const translateX = useValue(0);
-    const theHeight = 64;
     const offsetX = useValue(0);
-    const height = useValue(theHeight);
+    const deleteOpacity = useValue(1);
+    const height = useValue(110);
     const clock = useClock();
     const to = snapPoint(translateX, velocity.x, snapPoints);
     const shouldRemove = eq(to, -width);
@@ -68,7 +68,8 @@ const Item = (items, onSwipe) => {
           set(translateX, timing({clock, from: translateX, to })),
           set(offsetX, translateX),
           cond(shouldRemove, [
-             set(height, timing({from: theHeight, to: 0})),
+             set(height, timing({from: height, to: 0})),
+             set(deleteOpacity, 0),
             cond(not(clockRunning(clock)), call([], () => void onSwipe))
           ])
         ])
@@ -78,6 +79,9 @@ const Item = (items, onSwipe) => {
   //  const translateX = translation.x;
   return (
     <Animated.View>
+      <View style={matchesStyles.background}>
+        <Action x={abs(translateX)} deleteOpacity={deleteOpacity}/>
+      </View>
       <PanGestureHandler {...gestureHandler}>
         <Animated.View style={{ height, transform: [{ translateX }]}}>
           <ItemLayout props={items}/> 
@@ -94,8 +98,16 @@ const matchesStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F7F7F7',
-    marginTop: 60
-  }
+    marginTop: 10
+  },
+  background: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "#E1E2E3",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    overflow: "hidden",
+  },
 });
 
 export default Matches;

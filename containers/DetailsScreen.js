@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Text, View, Image, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from '../assets/styles';
 
 export default function DetailsScreen({ route }) {
   let data = route.params;
     return (
+      <SafeAreaView>
       <ScrollView>
-        <View style={{ flex: 1, justifyContent: "space-between",  flexDirection: "column"}}>
+        <View style={{ flex: 1, justifyContent: "space-between",  flexDirection: "column", marginLeft: 5}}>
           <View>
             <View style={{alignItems: "center"}}>
               <Image style={detailStyles.image} source={data.image}/>
@@ -26,6 +28,8 @@ export default function DetailsScreen({ route }) {
           </View>
         </View>
         </ScrollView>
+      </SafeAreaView>
+
       );
 }
 

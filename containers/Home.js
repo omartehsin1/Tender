@@ -22,8 +22,8 @@ const Home = () => {
       // if(val !== null) {
       //   setResult(val)
       // }
-        // console.log("val", val)
-       return val
+        //  console.log("val", val)
+       return JSON.parse(val)
     } catch(error) {
       console.log(error)
     }
@@ -45,13 +45,16 @@ const Home = () => {
 
   // fetchSelection().then(response => console.log(response));
   fetchSavedItems().then(response => 
-    
-      console.log("response", response)
-      // if(response !== null) {
-      //    setResult(response);
-      // } else {
-      //   setResult(Demo);
-      // }
+      {
+        if(response !== null) {
+             setResult(response);
+            // response.map((item) => console.log(item.description))
+            // console.log(response)
+       } else {
+        //  setResult(Demo);
+       }
+        
+      }
     
     )
     // useEffect(() => {
@@ -75,7 +78,7 @@ const Home = () => {
           
         </View>
         
-        {console.log("results", result)}
+        {/* {console.log("results", result)} */}
         
         
         <CardStack
@@ -84,7 +87,7 @@ const Home = () => {
           renderNoMoreCards={() => null}
           ref={swiper => (this.swiper = swiper)}
           >
-            {/* {result.map((item, index) => (
+            {result.map((item, index) => (
               <Card key={index} 
               onSwipedRight={() => 
                  AsyncStorage.setItem(index.toString(), JSON.stringify(item))
@@ -101,7 +104,7 @@ const Home = () => {
                   onPressRight={() => this.swiper.swipeRight()}
                   />
               </Card>
-            ))} */}
+            ))}
           </CardStack>
       </View>
     );

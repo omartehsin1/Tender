@@ -21,7 +21,7 @@ const Profile = () => {
   let theData = Demo;
 
   const savePressed = () => {
-        // AsyncStorage.clear();
+      //  AsyncStorage.clear();
     AsyncStorage.setItem("userFoodPreferences", JSON.stringify(data));
     AsyncStorage.setItem('chicken', JSON.stringify(isChickenSelected));
     AsyncStorage.setItem('beef', JSON.stringify(isBeefSelected));
@@ -42,8 +42,6 @@ const Profile = () => {
       const vegetarian = await AsyncStorage.getItem('vegetarian');
       const vegan = await AsyncStorage.getItem('vegan');
       const glutenFree = await AsyncStorage.getItem('glutenFree');
-      const val = await AsyncStorage.getItem("userFoodPreferences");
-      console.log(val)
       setChickenSelection(chicken)
       setBeefSelection(beef)
       setFishSelection(fish)
